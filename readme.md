@@ -1,4 +1,4 @@
-# redis 主从
+# Redis 主从
 
 ## 主库
 
@@ -35,18 +35,29 @@ docker pull redis
 
 # 目录
 ├── LICENSE
+├── README.md
 ├── docker-compose.yml
 ├── master
 │   ├── Dockerfile
 │   └── redis.conf
-├── readme.md
 ├── redis.conf
+├── sentinels
+│   ├── sentinel-1
+│   │   ├── Dockerfile
+│   │   └── redis-sentinel.conf
+│   ├── sentinel-2
+│   │   ├── Dockerfile
+│   │   └── redis-sentinel.conf
+│   └── sentinel-3
+│       ├── Dockerfile
+│       └── redis-sentinel.conf
 ├── slave1
 │   ├── Dockerfile
 │   └── redis.conf
 └── slave2
     ├── Dockerfile
     └── redis.conf
+
 
 # 启动
 docker-compose up -d master slave1 slave2
@@ -70,3 +81,20 @@ repl_backlog_first_byte_offset:1
 repl_backlog_histlen:1043
 
 ```
+
+
+
+# Redis Sentinel
+
+```
+protected-mode no
+bind 0.0.0.0
+port 26379
+daemonize yes
+sentinel monitor master 127.0.0.1 16379 2
+sentinel down-after-milliseconds master 5000
+sentinel failover-timeout master 180000
+sentinel parallel-syncs master 1
+sentinel auth-pass master root
+```
+
